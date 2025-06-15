@@ -1,0 +1,1 @@
+sudo pfctl -f /etc/pf.anchors/910.custom

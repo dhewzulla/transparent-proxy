@@ -1,0 +1,3 @@
+source $TRANSPARENT_PROXY_PROJECT_PATH/openwrt/commons/index.sh
+
+get_allnetowrk_interfaces_ip_addresses
