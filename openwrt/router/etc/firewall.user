@@ -65,11 +65,11 @@ iptables -t raw -D OUTPUT -p tcp --dport 1723 -j CT --helper pptp 2>/dev/null
 iptables -t raw -A OUTPUT -p tcp --dport 1723 -j CT --helper pptp
 
 # Charles HTTPS redirect
-iptables -t nat -A PREROUTING -p tcp -s 192.168.8.0/24 ! -d 192.168.8.0/24 --dport 80 -j DNAT --to-destination 192.168.0.25:8888
+iptables -t nat -A PREROUTING -p tcp -s 192.168.8.0/24 ! -d 192.168.8.0/24 --dport 80 -j DNAT --to-destination 192.168.1.229:8888
 
 
 
 
 # Force all DNS to go through 192.168.0.25
-iptables -t nat -A PREROUTING -i br-lan -p udp --dport 53 -j DNAT --to-destination 192.168.0.25
-iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 53 -j DNAT --to-destination 192.168.0.25
+#iptables -t nat -A PREROUTING -i br-lan -p udp --dport 53 -j DNAT --to-destination 192.168.1.229
+#iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 53 -j DNAT --to-destination 192.168.0.25
