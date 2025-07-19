@@ -155,3 +155,10 @@ add_http_proxy_to_firewall_user_file(){
   echo "iptables -t nat -A PREROUTING -p tcp -s 192.168.8.0/24 ! -d 192.168.8.0/24 --dport 80 -j DNAT --to-destination $charles_proxy_ip_address:$charles_proxy_port" >> $filepath
   
 }
+
+install_sqm_network_throttling(){
+  ssh -o HostKeyAlgorithms=+ssh-rsa \
+  -o PubkeyAcceptedKeyTypes=+ssh-rsa \
+  -i ~/.ssh/id_rsa \
+  $router_ssh_user_name@$router_ip_address "opkg update && opkg install sqm-scripts luci-app-sqm"
+}

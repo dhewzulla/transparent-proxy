@@ -1,24 +1,18 @@
 
 config dnsmasq
 	option domainneeded '1'
-	option boguspriv '1'
-	option filterwin2k '0'
 	option localise_queries '1'
 	option rebind_protection '1'
 	option rebind_localhost '1'
 	option local '/lan/'
 	option domain 'lan'
 	option expandhosts '1'
-	option nonegcache '0'
 	option authoritative '1'
 	option readethers '1'
 	option leasefile '/tmp/dhcp.leases'
-	option resolvfile '/tmp/resolv.conf.auto'
-	option nonwildcard '1'
 	option localservice '1'
-	option noresolv '1'
 	list server '192.168.0.25'
-	option strictorder '1'
+	option noresolv '1'
 
 config dhcp 'lan'
 	option interface 'lan'
@@ -26,7 +20,6 @@ config dhcp 'lan'
 	option limit '150'
 	option leasetime '12h'
 	option force '1'
-	option ignore '0'
 	option dhcpv6 'disabled'
 	option ra 'disabled'
 
@@ -51,4 +44,28 @@ config dhcp 'guest'
 config domain 'localhost'
 	option name 'console.gl-inet.com'
 	option ip '192.168.8.1'
+
+config host
+	option mac '00:F3:61:40:90:3B'
+	option ip '192.168.8.143'
+	option name 'fire4k'
+	option dns '1'
+
+config host
+	option mac '64:07:F6:1C:43:98'
+	option name 'tizen2020'
+	option dns '1'
+	option ip '192.168.8.172'
+
+config host
+	option mac '90:02:18:FF:BE:0D'
+	option name 'glass'
+	option dns '1'
+	option ip '192.168.8.184'
+
+config host
+	option mac 'D4:DA:CD:D6:2B:93'
+	option name 'skyq'
+	option dns '1'
+	option ip '192.168.8.245'
 
