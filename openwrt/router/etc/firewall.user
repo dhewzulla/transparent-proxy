@@ -54,7 +54,14 @@ gl-firewall
 iptables -t raw -D OUTPUT -p tcp -m tcp --dport 1723 -j CT --helper pptp
 iptables -t raw -A OUTPUT -p tcp -m tcp --dport 1723 -j CT --helper pptp
 
-iptables -t nat -A PREROUTING -p tcp -s 192.168.8.0/24 ! -d 192.168.8.0/24 --dport 80 -j DNAT --to-destination 192.168.0.25:8888
-# Force all DNS to go through 192.168.0.25
-#iptables -t nat -A PREROUTING -i br-lan -p udp --dport 53 -j DNAT --to-destination 192.168.1.229
-#iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 53 -j DNAT --to-destination 192.168.0.25
+
+PROXY_IP="192.168.0.25"
+PROXY_PORT="8888"
+
+
+# Intercept LAN->WAN HTTP and DNAT to proxy
+iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to-destination ${PROXY_IP}:${PROXY_PORT}
+
+# Allow LAN->proxy forwarding
+iptables -A FORWARD -i br-lan -o eth0.2 \
+  -d ${PROXY_IP} -p tcp --dport ${PROXY_PORT} -j ACCEPT

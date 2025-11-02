@@ -1,0 +1,16 @@
+PROXY_IP="192.168.0.25"
+PROXY_PORT="8888"
+
+# Avoid proxy loop
+iptables -t nat -A PREROUTING -s $PROXY_IP -j RETURN
+
+# Intercept LAN->WAN HTTP and DNAT to proxy
+iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to-destination ${PROXY_IP}:${PROXY_PORT}
+
+# Allow LAN->proxy forwarding
+iptables -A FORWARD -i br-lan -o eth0.2 \
+  -d ${PROXY_IP} -p tcp --dport ${PROXY_PORT} -j ACCEPT
+
+# Proxy sees router as source so return routing works
+iptables -t nat -A POSTROUTING -o eth0.2 \
+  -d ${PROXY_IP} -p tcp --dport ${PROXY_PORT} -j MASQUERADE

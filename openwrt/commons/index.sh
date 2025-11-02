@@ -123,6 +123,14 @@ restart_dnsmasq(){
   -i ~/.ssh/id_rsa \
   $router_ssh_user_name@$router_ip_address "/etc/init.d/dnsmasq restart"
 }
+list_interfaces(){
+  ssh -o HostKeyAlgorithms=+ssh-rsa \
+  -o PubkeyAcceptedKeyTypes=+ssh-rsa \
+  -i ~/.ssh/id_rsa \
+  $router_ssh_user_name@$router_ip_address "ip addr show"
+}
+
+
 list_network_interfaces(){
   ifconfig -a | grep -E '^[a-zA-Z0-9]+' | awk '{print $1}' | sed 's/://g' | sort -u
 }
