@@ -242,3 +242,11 @@ uci commit firewall
 ```
 
 ```
+
+# Apply CORRECT redirect rule (verified working form)
+
+```
+iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.25:8888
+iptables -A FORWARD -p tcp -d 192.168.0.25 --dport 8888 -j ACCEPT
+iptables -t nat -A POSTROUTING -d 192.168.0.25 -j MASQUERADE
+```
