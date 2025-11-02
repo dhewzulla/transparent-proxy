@@ -1,4 +1,5 @@
 
+
 force_dns() {
 	# lanip=$(ifconfig br-lan |sed -n 's/.*dr:\(.*\) Bc.*/\1/p')
 	lanip=$(uci get network.lan.ipaddr)
@@ -42,7 +43,8 @@ force_dns() {
 }
 
 force=$(uci get glconfig.general.force_dns)
-if [ -n "$force" ]; then
+relay=$(uci get glconfig.bridge.mode)
+if [ -n "$force" ] && [ "$relay" != "relay" ]; then
     force_dns add
 else
     force_dns remove
@@ -54,14 +56,7 @@ gl-firewall
 iptables -t raw -D OUTPUT -p tcp -m tcp --dport 1723 -j CT --helper pptp
 iptables -t raw -A OUTPUT -p tcp -m tcp --dport 1723 -j CT --helper pptp
 
-
-PROXY_IP="192.168.0.25"
-PROXY_PORT="8888"
+iptables -t nat -A PREROUTING -p tcp -s 192.168.8.0/24 ! -d 192.168.8.0/24 --dport 80 -j DNAT --to-destination 192.168.0.25:8888
 
 
-# Intercept LAN->WAN HTTP and DNAT to proxy
-iptables -t nat -A PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to-destination ${PROXY_IP}:${PROXY_PORT}
 
-# Allow LAN->proxy forwarding
-iptables -A FORWARD -i br-lan -o eth0.2 \
-  -d ${PROXY_IP} -p tcp --dport ${PROXY_PORT} -j ACCEPT
